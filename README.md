@@ -1,7 +1,7 @@
 
-# Ansible_apache2
+# Ansible_nginx
 
-Este playbook de Ansible está diseñado para instalar y configurar el servidor web Apache2 en un conjunto de servidores Linux. Además, incluye un script para realizar copias de seguridad automatizadas.
+Este playbook de Ansible está diseñado para instalar y configurar el servidor web Nginx en un conjunto de servidores Linux. Además, incluye un script para realizar copias de seguridad automatizadas.
 
 ## Instalación
 

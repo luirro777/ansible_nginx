@@ -1,0 +1,47 @@
+---
+- name: Actualizar lista de paquetes
+  apt:
+    update_cache: yes
+
+- name: Instalar Nginx
+  apt:
+    name: "{{ nginx_package }}"
+    state: present
+
+- name: Iniciar y habilitar Apache
+  service:
+    name: "{{ nginx_package }}"
+    state: started
+    enabled: yes
+
+- name: Asegurarse de que UFW esté instalado
+  apt:
+    name: ufw
+    state: present
+
+- name: Permitir tráfico HTTP y HTTPS en el firewall
+  ufw:
+    rule: allow
+    port: "{{ item.port }}"
+    proto: "{{ item.proto }}"
+  loop: "{{ firewall_ports }}"
+
+- name: Habilitar UFW
+  ufw:
+    state: enabled
+
+- name: Configurar permisos en el directorio web
+  file:
+    path: "{{ web_root }}"
+    owner: www-data
+    group: www-data
+    mode: '0755'
+    recurse: yes
+
+- name: Crear un archivo index.html de prueba
+  copy:
+    src: index.html
+    dest: "{{ web_root }}/index.html" 
+    owner: www-data
+    group: www-data
+    mode: '0644'

@@ -1,0 +1,14 @@
+# group_vars/webservers.yml
+nginx_package: nginx
+firewall_ports:
+  - { port: 80, proto: tcp }
+  - { port: 443, proto: tcp }
+  - { port: 22, proto: tcp }
+backup_user: root
+web_root: /var/www/html
+backup_directories:
+  - /etc
+  - /var/www
+  - /home
+backup_destination: /backup
+cron_time: "0 2 * * *"  # Ejecutar todos los días a las 2 AM

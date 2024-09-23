@@ -1,0 +1,42 @@
+---
+- name: Crear usuario para copias de seguridad
+  user:
+    name: "{{ backup_user }}"
+    comment: "Usuario para tareas de copia de seguridad"
+    shell: /bin/bash
+    create_home: yes
+    state: present
+
+- name: Crear directorio de destino de la copia de seguridad
+  file:
+    path: "{{ backup_destination }}"
+    state: directory
+    owner: "{{ backup_user }}"
+    group: "{{ backup_user }}"
+    mode: '0755'
+
+- name: Instalar rsync
+  apt:
+    name: rsync
+    state: present
+
+- name: Copiar el script de copia de seguridad al servidor
+  copy:
+    src: backup.sh
+    dest: /usr/local/bin/backup.sh
+    owner: "{{ backup_user }}"
+    group: "{{ backup_user }}"
+    mode: '0755'
+
+- name: Programar tarea cron para copias de seguridad
+  cron:
+    name: "Copia de seguridad automática"
+    user: "{{ backup_user }}"
+    minute: "{{ cron_time.split()[0] }}"
+    hour: "{{ cron_time.split()[1] }}"
+    day: "{{ cron_time.split()[2] }}"
+    month: "{{ cron_time.split()[3] }}"
+    weekday: "{{ cron_time.split()[4] }}"
+    job: "/usr/local/bin/backup.sh"
+
+
